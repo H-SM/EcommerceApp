@@ -1,28 +1,30 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const User = require('./schemas/user');
+const User = require("./schemas/user");
 
 // Sign-up route
-router.post('/signup', async (req, res) => {
+router.post("/signup", async (req, res) => {
   try {
     // Create a new user
-    const newUser = new User(req.body);
+    const { username, email, password } = req.body;
+    console.log(username);
+    const newUser = new User({ username, email, password });
     await newUser.save();
-    res.status(201).send('User created successfully');
+    res.status(201).send("User created successfully");
   } catch (error) {
     res.status(400).send(error.message);
   }
 });
 
 // Login route
-router.post('/login', async (req, res) => {
+router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findByCredentials(email, password);
     // Implement authentication logic and generate tokens here
-    res.status(200).send('Login successful');
+    res.status(200).send("Login successful");
   } catch (error) {
-    res.status(401).send('Invalid credentials');
+    res.status(401).send("Invalid credentials");
   }
 });
 
