@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const { Schema } = mongoose;
 
-const cartItemSchema = new mongoose.Schema({
+const cartItemSchema = new Schema({
   productId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Product', // Reference to your Product model
@@ -13,11 +13,10 @@ const cartItemSchema = new mongoose.Schema({
   }
 });
 
-const userSchema = new mongoose.Schema({
-  username: {
+const userSchema = new Schema({
+  name: {
     type: String,
     required: true,
-    unique: true,
   },
   email: {
     type: String,
@@ -31,15 +30,4 @@ const userSchema = new mongoose.Schema({
   cart: [cartItemSchema], // Array of items in the cart
 });
 
-userSchema.pre('save', async function (next) {
-  const user = this;
-  if (user.isModified('password')) {
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(user.password, salt);
-  }
-  next();
-});
-
-const User = mongoose.model('User', userSchema);
-
-module.exports = User;
+module.exports = mongoose.model('User', userSchema);
