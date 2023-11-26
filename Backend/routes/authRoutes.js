@@ -13,7 +13,7 @@ router.post('/signup',[
   body('email', "Enter a valid Email").isEmail(),
   body('password', 'Password must have a minimum of 5 characters').isLength({ min: 5 }),
 ],async (req,res)=>{
-  const errors = validationResult(req);
+    const errors = validationResult(req);
     let success = false;
     if(!errors.isEmpty()){
         return res.status(400).json({success, errors : errors.array()});
