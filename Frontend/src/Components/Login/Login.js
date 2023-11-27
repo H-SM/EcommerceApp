@@ -1,49 +1,53 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import "./Login.css";
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
+import userContext from "../../context/User/userContext";
 
 function Login() {
   const loginRef = useRef();
-
-  const [signupdata, setsignupdata] = useState({
+  const [credentails, setCredentails] = useState({
     email: "",
-    username: "",
     password: "",
+    name: "",
   });
-
   const [isSigningUp, setIsSigningUp] = useState(false);
 
-  const sendSignup = async () => {
-    console.log(signupdata);
-    try {
-      // const response = await fetch("http://localhost:8000/api/signup", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(signupdata),
-      // });
-      const response = await axios.post(
-        "http://localhost:8000/api/signup",
-        signupdata
-      );
-      console.log(response);
-
-      // resets the form after successful sign-up
-      setsignupdata({
-        email: "",
-        username: "",
-        password: "",
+  const context = useContext(userContext);
+  const { login, signin } = context;
+  const handleClick = async (e) => {
+    e.preventDefault();
+    let json;
+    if (isSigningUp) {
+      json = await signin({
+        name: credentails.name,
+        email: credentails.email,
+        password: credentails.password,
       });
-    } catch (error) {
-      console.error("Error during sign-up:", error);
+      if (json.success) {
+        //save the auth_token and redirect
+        localStorage.removeItem("token");
+        localStorage.setItem("token", json.jwt_token);
+        alert("Account created successfully!");
+      } else {
+        alert("Invalid Credentials! Please check again.");
+      }
+    } else {
+      // If signup is false, call the login context
+      json = await login({
+        email: credentails.email,
+        password: credentails.password,
+      });
+      if (json.success) {
+        localStorage.setItem("token", json.auth_token);
+        alert("Logged in successfully!");
+      } else {
+        alert("Invalid Credentials! Please check again.");
+      }
     }
   };
-
-  const handleSignup = (e) => {
-    const { name, value } = e.target;
-    setsignupdata({ ...signupdata, [name]: value });
+  const onChange = (e) => {
+    setCredentails({ ...credentails, [e.target.name]: e.target.value });
   };
 
   return (
@@ -54,29 +58,30 @@ function Login() {
         {/* Render email field only if it's a sign-up */}
         {isSigningUp && (
           <input
+          type="text"
+          placeholder="name"
+          name="name"
+          id="name"
+          onChange={onChange}
+        />
+        )}
+        <input
             type="text"
             placeholder="Email"
             name="email"
-            value={signupdata.email}
-            onChange={handleSignup}
+            id="email"
+            onChange={onChange}
+            required
           />
-        )}
-
-        <input
-          type="text"
-          placeholder="Username"
-          name="username"
-          value={signupdata.username}
-          onChange={handleSignup}
-        />
         <input
           type="password"
           placeholder="Password"
           name="password"
-          value={signupdata.password}
-          onChange={handleSignup}
+          id="password"
+          onChange={onChange}
+          required
         />
-        <button onClick={sendSignup}>
+        <button onClick={handleClick}>
           {isSigningUp ? "Sign Up" : "Login"}
         </button>
         <p>
