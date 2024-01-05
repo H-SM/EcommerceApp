@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 const cartItemSchema = new Schema({
   productId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product', // Reference to your Product model
+    ref: 'Product',
     required: true,
   },
   quantity: {
@@ -27,7 +27,11 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  cart: [cartItemSchema], // Array of items in the cart
+  cartList:{
+    type : [cartItemSchema],
+    default:[],
+  }
 });
 
-module.exports = mongoose.model('User', userSchema);
+const users = mongoose.model('User',userSchema);
+module.exports=users;

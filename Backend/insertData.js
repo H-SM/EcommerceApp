@@ -1,5 +1,4 @@
 const {MongoClient}=require('mongodb');
-// inserts all data into the database successfully...
 const productsToInsert=[
   { _id: 1000, name: 'Adidas Men Shoes', brand: 'Adidas', price: 2999, category: 'Men', image: './products/adidas1.jpg' },
   { _id: 1001, name: 'Adidas Women Shoes', brand: 'Adidas', price: 2899, category: 'Women', image: './products/adidas2.jpg' },
@@ -72,7 +71,7 @@ async function connectToMongoDB() {
 
 async function insertData(client) {
     try {
-      const database = client.db('ecomsite');
+      const database = client.db('ecomsitedb');
       const collection = database.collection('products'); 
   
       const result = await collection.insertMany(productsToInsert);

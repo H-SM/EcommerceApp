@@ -1,69 +1,91 @@
-/* ProductDetails.css */
-
-.product-details-container {
-    display: flex;
-    flex-direction: column;
-    align-items:flex-start;
-    padding:20px;
+    .product-details-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      margin: auto;
+    }
+    
+    .product-picture {
+      display: flex;
+      flex-direction: row-reverse;
+    }
+    
+    .product-picture img {
+      max-width: 200px; 
+      margin-left: 20px;
+    }
+    
+    .product-details {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      max-width: 300px; /* Adjust as needed */
+    }
+    
+    .product-details h2 {
+      font-size: 2em; /* Larger font size */
+      margin: 0; /* Reset margin */
+    }
+  
+  .product-price {
+    margin: 5px 0;
+    font-weight: bold;
+    font-size: 18px;
   }
   
-  .product-image {
-    flex: 1;
-    margin-right: 20px;
+  .quantity-button {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0 5px;
   }
   
-  .product-image img {
-    width: 300px;
-    height: auto;
-  }
-  
-  .product-info {
-    margin-top: 20px;
-  }
-  
-  .product-info p {
-    margin-bottom: 10px;
+  .return-info {
+    margin: 10px 0;
+    color: #666;
   }
   
   .product-bullets {
-    margin-top: 20px;
-    font-size: 16px;
+    text-align: left;
+    margin-bottom: 20px;
   }
   
   .product-bullets ul {
     list-style-type: disc;
     padding-left: 20px;
+    color: #333;
   }
   
-  .product-bullets li {
-    margin-bottom: 5px;
-  }
-  
-  .product-name {
-    font-weight: bold;
-    font-size: 24px;
-  }
-  
-  .product-brand {
-    margin-bottom: 10px;
-  }
-  
-  .product-return {
-    margin-bottom: 10px;
-  }
-  
-  .product-buttons {
+  .button-container {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
   }
   
-  .button-container{
-    display:flex;
+  .action-button {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0 5px;
+    cursor: pointer;
+  }
+  
+  .buy-now-button {
+    background: #ff4500;
+    color: white;
+  }
+  
+  .add-to-cart-button {
+    background: #4caf50;
+    color: white;
   }
 
-  .button-container button {
-    margin-right: 40px; 
+  .bn .atc{
+    margin-left : 3px;
   }
-  .button-container button:first-child {
-    margin-right: 0;
-  }
+  

@@ -4,10 +4,10 @@ const User = require("../models/user");
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
-const fetchuser = require('../middleware/fetchuser');
 const JWT_SECRET = 'abh_first_repo';
+const cors = require('cors');
+const fetchuser = require('../middleware/fetchuser');
 
-// Sign-up route
 router.post('/signup',[
   body('name', 'Enter a valid name').isLength({ min: 3 }),
   body('email', "Enter a valid Email").isEmail(),
@@ -47,7 +47,6 @@ router.post('/signup',[
     }
 });
 
-// Login route
 router.post('/login',[
     body('email', "Enter a valid Email").isEmail(),
     body('password', 'Password cannot be blank').exists()
@@ -83,16 +82,27 @@ router.post('/login',[
 
 });
 
-//GET logged-in user details : POST "/api/auth/getuser". login required 
-router.get('/getuser',fetchuser,  async (req,res)=>{
-    try {
-        const userId = req.user.id;
-        const user = await User.findById(userId).select("-password");
-        res.send(user);
-    } catch (err_hsm) {
-        console.error(err_hsm);
-        res.status(500).send("INTERNAL SERVER ERROR : Some error occured");
+router.get('/getuser', fetchuser, async (req, res) => {
+   
+  try{
+      // If no email parameter is provided, fetch currently authenticated user
+      const userId = req.user.id;
+      const user = await User.findById(userId).select("-password");
+      if (user) {
+        return res.send(user);
+      }
+      return res.status(404).send('User not found');
+    } catch (err) {
+      console.error(err);
+      return res.status(500).send('INTERNAL SERVER ERROR: Some error occurred');
     }
-});
+  });
+
+ 
+
+
+
 
 module.exports = router;
+
+

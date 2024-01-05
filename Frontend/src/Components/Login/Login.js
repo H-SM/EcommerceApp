@@ -3,8 +3,24 @@ import "./Login.css";
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import userContext from "../../context/User/userContext";
+import {message} from 'antd';
 
-function Login() {
+let userIdentifier = '';
+let currCart = [];
+
+
+function Login(props) {
+
+  const closeLogin=()=>{
+    props.onLogin();
+  }
+
+  const [userCart, setUserCart] = useState(null);
+  const [isLoggedin,setLoggedin]=useState(false);
+
+  const handleLoginDone =()=>{
+    setLoggedin(true);
+  }
   const loginRef = useRef();
   const [credentails, setCredentails] = useState({
     email: "",
@@ -12,6 +28,25 @@ function Login() {
     name: "",
   });
   const [isSigningUp, setIsSigningUp] = useState(false);
+
+  const fetchUserCart = async (credentails) => {
+    try {
+      const response = await fetch('https://localhost:8000/', {
+        method: 'POST',
+        body: JSON.stringify(credentails),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // Process the response and extract cart data
+      const data = await response.json();
+      return data.user.cart; // Assuming user's cart data is nested within the response
+    } catch (error) {
+      console.error('Error fetching user cart:', error);
+      return null; // Return null or handle error as needed
+    }
+  };
 
   const context = useContext(userContext);
   const { login, signin } = context;
@@ -23,26 +58,30 @@ function Login() {
         name: credentails.name,
         email: credentails.email,
         password: credentails.password,
+        cartList:[],
       });
       if (json.success) {
         //save the auth_token and redirect
         localStorage.removeItem("token");
         localStorage.setItem("token", json.jwt_token);
-        alert("Account created successfully!");
+        message.success("Account created successfully!");
+
       } else {
-        alert("Invalid Credentials! Please check again.");
+        message.error('This email is already associated with an account.');
       }
     } else {
-      // If signup is false, call the login context
       json = await login({
         email: credentails.email,
         password: credentails.password,
       });
       if (json.success) {
         localStorage.setItem("token", json.auth_token);
-        alert("Logged in successfully!");
+        message.success("Logged in successfully!");
+        handleLoginDone();
+        userIdentifier = credentails.email;
+        closeLogin();
       } else {
-        alert("Invalid Credentials! Please check again.");
+        message.error("Invalid Credentials! Please check again.");
       }
     }
   };
@@ -50,12 +89,12 @@ function Login() {
     setCredentails({ ...credentails, [e.target.name]: e.target.value });
   };
 
+
   return (
     <div className="modal-container" ref={loginRef}>
-      <div className="login-container">
+      <div className= "login-container">
         <h2>{isSigningUp ? "Sign Up" : "Login"}</h2>
 
-        {/* Render email field only if it's a sign-up */}
         {isSigningUp && (
           <input
           type="text"
@@ -97,4 +136,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default {Login,userIdentifier}; 

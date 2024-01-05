@@ -1,16 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import "./Home.css";
-import Login from "./Login/Login";
+import obj from "./Login/Login";
 import menIcon from "./men-icon.png";
 import womenIcon from "./women-icon.png";
 import kidsIcon from "./kids-icon.png";
 import shoes from "./shoes-icon.png";
-//import jackets from './jackets-icon.png';
-//import shirts from './shirts-icon.png';
 import caps from "./caps-icon.png";
 import jeans from "./jeans-icon.png";
 import tshirt from "./tshirts-icon.png";
-//import cargos from './cargos-icon.png';
 import adidas from "./adidas.jpg";
 import puma from "./puma.jpg";
 import nike from "./nike.jpg";
@@ -18,17 +15,39 @@ import jordan from "./jordan.jpg";
 import reebok from "./reebok.jpg";
 import { productsearch } from "./Search/productsearch";
 import SearchResults from "./Search/searchresults";
+import {message} from 'antd';
+import userContextValue from "../context/User/userContext";
 
 function Home() {
+
+
+  const Login = obj.Login;
+  
+  const [isLoggedin,setisLoggedin]=useState(false);
+  const context =useContext(userContextValue);
+  const {userData,getuserinfo}=context;
+  useEffect(()=>{
+    getuserinfo();
+    if(localStorage.getItem("token"))
+      setisLoggedin(true);
+    else setisLoggedin(false);
+  },[])
+  console.log(userData);
+
   const [isSearchExpanded, setSearchExpanded] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const searchInputRef = useRef(null);
   const [isHomePage, setIsHomePage] = useState(true);
-  //const navigate = useNavigate();
   const [isLoginOpen, setLoginOpen] = useState(false);
 
   const [displayedProducts, setDisplayedProducts] = useState([]);
+
+
+  const Logout=()=>{
+    setisLoggedin(false);
+    message.success('Signed out successfully.');
+  }
 
   const handleCategoryClick = (brand, event) => {
     event.preventDefault();
@@ -39,6 +58,7 @@ function Home() {
 
   const openLogin = () => {
     setLoginOpen(true);
+    setisLoggedin(true);
   };
 
   const closeLogin = () => {
@@ -105,12 +125,12 @@ function Home() {
           </span>
           Cart
         </button>
-        <button className="wishlist-button">
+        {/* <button className="wishlist-button">
           <span className="wishlist-icon" role="img" aria-label="Wishlist">
             ❤️
           </span>
           Wishlist
-        </button>
+        </button> */}
         <a
           href="/"
           className="navbar-title"
@@ -128,9 +148,22 @@ function Home() {
           />
           <button onClick={handleSearch}>Search</button>
         </div>
+        {isLoggedin ===false ? (
         <button className="sign-in-button" onClick={openLogin}>
           Sign In
         </button>
+        
+        ):(
+          <>
+          <div className="uid">
+              {userData.name}
+            </div>
+          <button className="sign-in-button" onClick={Logout}>
+          Sign Out
+        </button>
+        </>
+        )
+        }
       </div>
 
       <header className="header">
@@ -259,14 +292,14 @@ function Home() {
       <footer className="footer">
         <p>&copy; {new Date().getFullYear()} The FLEXKART Store</p>
       </footer>
-      <div className="jak">
-        {isLoginOpen === true && <Login onClose={closeLogin} />}
-      </div>
+      {/* <div className="jak">
+        {isLoginOpen === true && <Login onLogin={closeLogin}  />}
+      </div> */}
       {isLoginOpen && (
         <div>
           <div className="background-blur"></div>
           <div className="modal">
-            <Login />
+            <Login onLogin = {closeLogin}/>
             <button onClick={closeLogin}>Close</button>
           </div>
         </div>

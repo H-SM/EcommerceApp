@@ -142,10 +142,11 @@
 }
   
 .fancy-text {
+  margin-left:26vw;
   font-size: 48px; 
   font-weight: 700; 
   color: white;
-  text-transform: uppercase; /* Uppercase the text */
+  text-transform: uppercase;
   text-shadow: 3px 3px 0 #007bff, 3px -3px 0 #007bff, -3px 3px 0 #007bff, -3px -3px 0 #007bff;
 }
   
