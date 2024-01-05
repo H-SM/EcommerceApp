@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import obj from '../Login/Login';
-import users from '../../models/user';
 import axios from 'axios';
+import userContextValue from "../../context/User/userContext";
 
 const ProductDetails = ({ selectedProduct, addToCart }) => {
   const [showDetails, setShowDetails] = useState(true);
   const [quantity, setQuantity] = useState(1);
   //const UserModel = require('../../models/user');
-  
+  const context =useContext(userContextValue);
+  const {userData,getuserinfo}=context;
   if (!selectedProduct) {
     return <div>No product selected</div>;
   }
@@ -21,19 +22,16 @@ const ProductDetails = ({ selectedProduct, addToCart }) => {
   const handleBuyNow = () => {
     
   };
-
+  console.log(userData);
   const handleAddToCart = async() => {
 
     //const newProduct
     //addToCart(selectedProduct, quantity);
-    const response = await axios.get('http://localhost:8000/api/crud/getuser',{
-      email : obj.userIdentifier,
-    });
-    const user = response.data;
-    const crt = user.cartList;
+   
+    const crt = userData.cartList;
     crt.push({selectedProduct});
     await axios.put('http://localhost:8000/api/crud/updatecart', {
-      email: user.email,
+      email: userData.email,
       crt: crt,
     });
   };
