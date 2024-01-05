@@ -4,28 +4,6 @@ const router = express.Router();
 const User = require("../models/user");
 
 
-router.get('/getuser', async (req, res) => {
-    try {
-      const { email } = req.body;
-  
-      if (email) {
-        const userByEmail = await User.findOne({ email });
-        if (userByEmail) {
-          return res.send(userByEmail);
-        }
-        return res.status(404).send('User not found by email');
-      }
-      return res.status(404).send('User not found');
-    } catch (err) {
-      console.error(err);
-      return res.status(500).send('INTERNAL SERVER ERROR: Some error occurred');
-    }
-  });
-
-
-
-
-
 router.put('/updatecart', async(req, res) => {
     const { email, crt } = req.body;
   

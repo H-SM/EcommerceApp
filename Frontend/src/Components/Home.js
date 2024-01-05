@@ -32,7 +32,6 @@ function Home() {
       setisLoggedin(true);
     else setisLoggedin(false);
   },[])
-  console.log(userData);
 
   const [isSearchExpanded, setSearchExpanded] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -40,6 +39,7 @@ function Home() {
   const searchInputRef = useRef(null);
   const [isHomePage, setIsHomePage] = useState(true);
   const [isLoginOpen, setLoginOpen] = useState(false);
+  const [isCartOpen, setCartOpen] = useState(false);
 
   const [displayedProducts, setDisplayedProducts] = useState([]);
 
@@ -119,7 +119,7 @@ function Home() {
   return (
     <div>
       <div className="navbar">
-        <button className="cart-button">
+        <button className="cart-button" onClick={() => {setCartOpen(!isCartOpen)}}>
           <span className="cart-icon" role="img" aria-label="Cart">
             🛒
           </span>
