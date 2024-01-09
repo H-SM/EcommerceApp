@@ -5,7 +5,7 @@ const cors = require('cors');
 const app = express();
 const authRoutes = require('./routes/authRoutes.js'); 
 const crudRoutes = require('./routes/crudRoutes.js');
-// const paymentRoutes = require('./routes/paymentRoutes.js');
+//const paymentRoutes = require('./routes/paymentRoutes.js');
 
 app.use(express.json());
 app.use(cors());
