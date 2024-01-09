@@ -2,8 +2,10 @@ import React, { useContext, useState } from 'react';
 import obj from '../Login/Login';
 import axios from 'axios';
 import userContextValue from "../../context/User/userContext";
+import {message} from 'antd';
 
 const ProductDetails = ({ selectedProduct, addToCart }) => {
+  console.log(selectedProduct);
   const [showDetails, setShowDetails] = useState(true);
   const [quantity, setQuantity] = useState(1);
   //const UserModel = require('../../models/user');
@@ -25,15 +27,35 @@ const ProductDetails = ({ selectedProduct, addToCart }) => {
   console.log(userData);
   const handleAddToCart = async() => {
 
+
+
+
     //const newProduct
     //addToCart(selectedProduct, quantity);
-   
     const crt = userData.cartList;
-    crt.push({selectedProduct});
+    let flag = false;
+    crt.forEach((item) => {
+          if (selectedProduct._id === item._id) {
+            // If item exists, update its quantity
+            item.quantity += quantity;
+            flag = true ;
+            return ;
+          }
+    });
+
+
+
+    if(flag === false){
+          selectedProduct.quantity = quantity;
+          crt.push(selectedProduct);
+        }
+      
+    
     await axios.put('http://localhost:8000/api/crud/updatecart', {
       email: userData.email,
       crt: crt,
     });
+    message.success('Product added to cart .')
   };
 
   const incrementQuantity = () => {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import "./Home.css";
+import Cart from './CartPage/Cart';
 import obj from "./Login/Login";
 import menIcon from "./men-icon.png";
 import womenIcon from "./women-icon.png";
@@ -18,6 +19,7 @@ import SearchResults from "./Search/searchresults";
 import {message} from 'antd';
 import userContextValue from "../context/User/userContext";
 
+
 function Home() {
 
 
@@ -25,7 +27,7 @@ function Home() {
   
   const [isLoggedin,setisLoggedin]=useState(false);
   const context =useContext(userContextValue);
-  const {userData,getuserinfo}=context;
+  const {userData,getuserinfo,setUserData}=context;
   useEffect(()=>{
     getuserinfo();
     if(localStorage.getItem("token"))
@@ -116,10 +118,20 @@ function Home() {
     setSearchExpanded(!isSearchExpanded);
   };
 
+
+  const CartClick = () =>{
+    setCartOpen(!isCartOpen);
+    setIsHomePage(!isHomePage);
+  };
+
+
+
+  
+
   return (
-    <div>
+    <div className = "all-hehe">
       <div className="navbar">
-        <button className="cart-button" onClick={() => {setCartOpen(!isCartOpen)}}>
+        <button className="cart-button" onClick={CartClick}>
           <span className="cart-icon" role="img" aria-label="Cart">
             🛒
           </span>
@@ -139,7 +151,8 @@ function Home() {
           <span className="fancy-text">FLEXKART</span>
         </a>
         <div className="search-container">
-          <input
+          <input 
+            className="text-black"
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -166,8 +179,8 @@ function Home() {
         }
       </div>
 
-      <header className="header">
-        <h1>The FLEXKART Diwali Sale is Live !!!</h1>
+      <header className="header mt-12 text-2xl font-bold">
+        <h1>The FLEXKART New Year Sale is Live !!!</h1>
       </header>
       {!isHomePage ? (
         <div className="res">
@@ -184,7 +197,7 @@ function Home() {
             >
               <a href="/men">
                 <img src={menIcon} alt="Men" />
-                <h3>Men</h3>
+                <h3 className="font-bold">Men</h3>
               </a>
             </div>
             <div
@@ -193,7 +206,7 @@ function Home() {
             >
               <a href="/women">
                 <img src={womenIcon} alt="Women" />
-                <h3>Women</h3>
+                <h3 className="font-bold">Women</h3>
               </a>
             </div>
             <div
@@ -202,12 +215,12 @@ function Home() {
             >
               <a href="/kids">
                 <img src={kidsIcon} alt="Kids" />
-                <h3>Kids</h3>
+                <h3 className="font-bold">Kids</h3>
               </a>
             </div>
           </div>
           <div className="brand-section">
-            <h1>Browse among the Most Popular Brands</h1>
+            <h1 className="text-2xl font-bold">Browse among the Most Popular Brands</h1>
             <div className="brand-cards">
               <div
                 className="brand-card"
@@ -243,7 +256,7 @@ function Home() {
           </div>
 
           <div className="search-section">
-            <h2>
+            <h2 className="text-2xl font-bold">
               Get Exciting Offers and Upto 50% OFF on the Following Categories{" "}
             </h2>
             <div className="category-cards">
@@ -253,7 +266,7 @@ function Home() {
               >
                 <a href="/shoes">
                   <img src={shoes} alt="Shoes" />
-                  <h3>Shoes</h3>
+                  <h3 className="font-bold">Shoes</h3>
                 </a>
               </div>
               <div
@@ -262,7 +275,7 @@ function Home() {
               >
                 <a href="/tshirts">
                   <img src={tshirt} alt="T-shirts" />
-                  <h3>T-shirts</h3>
+                  <h3 className="font-bold">T-shirts</h3>
                 </a>
               </div>
               <div
@@ -271,7 +284,7 @@ function Home() {
               >
                 <a href="/jeans">
                   <img src={jeans} alt="Jeans" />
-                  <h3>Joggers</h3>
+                  <h3 className="font-bold">Joggers</h3>
                 </a>
               </div>
 
@@ -281,13 +294,34 @@ function Home() {
               >
                 <a href="/caps">
                   <img src={caps} alt="Caps" />
-                  <h3>Caps</h3>
+                  <h3 className="font-bold">Caps</h3>
                 </a>
               </div>
             </div>
           </div>
         </div>
       )}
+        <>
+        <div className="crtdiv">
+
+        {isCartOpen && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <button className="close-btn" onClick={CartClick}>
+                Close
+              </button>
+              <h2 className="your-cart-txt">Your Cart</h2>
+              {userData && userData.cartList ? (
+                <Cart cartList={userData.cartList} />
+              ) : (
+                <p>Loading the items in the cart...</p>
+                )}
+            </div>
+          </div>
+        )}
+        </div>
+        </>  
+
 
       <footer className="footer">
         <p>&copy; {new Date().getFullYear()} The FLEXKART Store</p>
@@ -304,6 +338,8 @@ function Home() {
           </div>
         </div>
       )}
+      
+      
     </div>
   );
 }
